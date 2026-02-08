@@ -1,0 +1,16 @@
+namespace Muonroi.Modular.Host.Controllers;
+
+public class RulesController(IMediator mediator, ILogger logger, IMapper mapper)
+    : MControllerBase(mediator, logger, mapper)
+{
+    [HttpGet("evaluate/{value:int}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> Evaluate(int value, CancellationToken cancellationToken)
+    {
+        var response = await Mediator
+            .Send(new EvaluateNumberQuery(value), cancellationToken)
+            .ConfigureAwait(false);
+        return response.GetActionResult();
+    }
+}
+

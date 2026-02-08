@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+  <metadata>
+    <id>Muonroi.Modular.Template</id>
+    <version>1.9.2</version>
+    <description>Muonroi Modular Template - ASP.NET Core modular monolith solution template with BuildingBlock framework, featuring 3-Tier License Security, Modular Architecture, Plug-in System, and Dynamic Module Loading.</description>
+    <authors>Muonroi</authors>
+    <license type="expression">MIT</license>
+    <projectUrl>https://github.com/muonroi/MuonroiBuildingBlock</projectUrl>
+    <repository type="git" url="https://github.com/muonroi/MuonroiBuildingBlock" />
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>dotnet template aspnetcore modular-monolith muonroi buildingblock plugin-system modules</tags>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+  <files>
+    <file src="**\*" target="content" exclude="**\bin\**;**\obj\**;**\logs\**;**\*.db;**\*.db-shm;**\*.db-wal;**\*.user;**\*.suo;**\.vs\**;**\.vscode\**;**\.idea\**;**\*.nuspec" />
+  </files>
+</package>
