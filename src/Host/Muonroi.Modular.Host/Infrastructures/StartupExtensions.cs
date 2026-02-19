@@ -84,17 +84,18 @@ public static class StartupExtensions
         _ = app.UseRouting();
         _ = app.UseCors("MAllowDomains");
 
+        _ = app.UseDefaultMiddleware();
+        _ = app.UseWhen(ctx => !ctx.Request.Path.StartsWithSegments("/swagger"),
+            branch => { _ = branch.UseMiddleware<JwtMiddleware>(); });
+
         // Multi-tenant middleware (only if enabled)
+        // Keep this after JwtMiddleware so tenant claim consistency can be validated.
         var multiTenantEnabled = configuration.GetValue("MultiTenantConfigs:Enabled", false);
         if (multiTenantEnabled)
         {
             _ = app.UseMiddleware<TenantContextMiddleware>();
         }
 
-        _ = app.UseDefaultMiddleware();
-        _ = app.UseMiddleware<LicenseMiddleware>();
-        _ = app.UseWhen(ctx => !ctx.Request.Path.StartsWithSegments("/swagger"),
-            branch => { _ = branch.UseMiddleware<JwtMiddleware>(); });
         _ = app.AddLocalization(assembly);
         _ = app.UseAuthentication();
         _ = app.UseAuthorization();
