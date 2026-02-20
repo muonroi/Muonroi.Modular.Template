@@ -17,19 +17,62 @@ NC='\033[0m' # No Color
 # Get script directory and root directory
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+DOTNET_CMD=""
+DATA_PROJECT_ARG=""
+API_PROJECT_ARG=""
+
+resolve_dotnet() {
+    if command -v dotnet >/dev/null 2>&1; then
+        DOTNET_CMD="dotnet"
+    elif command -v dotnet.exe >/dev/null 2>&1; then
+        DOTNET_CMD="dotnet.exe"
+    else
+        echo -e "${RED}Error: dotnet CLI not found. Install .NET SDK or expose dotnet/dotnet.exe on PATH.${NC}"
+        exit 1
+    fi
+}
+
+run_dotnet_ef() {
+    "$DOTNET_CMD" ef "$@"
+}
+
+to_dotnet_path() {
+    local path="$1"
+    if [ "$DOTNET_CMD" = "dotnet.exe" ] && command -v wslpath >/dev/null 2>&1; then
+        wslpath -w "$path"
+    else
+        echo "$path"
+    fi
+}
+
+set_project_args() {
+    DATA_PROJECT_ARG="$(to_dotnet_path "$DATA_PROJECT")"
+    API_PROJECT_ARG="$(to_dotnet_path "$API_PROJECT")"
+}
 
 # Find Data and API projects
 find_projects() {
-    DATA_PROJECT=$(find "$ROOT_DIR/src" -maxdepth 1 -type d -name "*.Data" | head -1)
-    API_PROJECT=$(find "$ROOT_DIR/src" -maxdepth 1 -type d -name "*.API" | head -1)
+    DATA_PROJECT=""
+    API_PROJECT=""
+
+    while IFS= read -r -d '' csproj; do
+        base_name="$(basename "$csproj")"
+        if [ -z "$DATA_PROJECT" ] && echo "$base_name" | grep -qi '\.Kernel\.csproj$'; then
+            DATA_PROJECT="$csproj"
+        fi
+
+        if [ -z "$API_PROJECT" ] && grep -q 'Microsoft.NET.Sdk.Web' "$csproj"; then
+            API_PROJECT="$csproj"
+        fi
+    done < <(find "$ROOT_DIR/src" -type f -name "*.csproj" -print0)
 
     if [ -z "$DATA_PROJECT" ]; then
-        echo -e "${RED}Error: Could not find Data project in src folder${NC}"
+        echo -e "${RED}Error: Could not find Kernel project under src${NC}"
         exit 1
     fi
 
     if [ -z "$API_PROJECT" ]; then
-        echo -e "${RED}Error: Could not find API project in src folder${NC}"
+        echo -e "${RED}Error: Could not find Web API project under src${NC}"
         exit 1
     fi
 
@@ -47,6 +90,7 @@ show_usage() {
     echo ""
     echo "Commands:"
     echo "  add <name>        Add a new migration"
+    echo "  init [name]       Create initial migration if missing, then update database"
     echo "  update [target]   Update database to latest or specific migration"
     echo "  remove [--force]  Remove the last migration"
     echo "  list              List all migrations"
@@ -55,6 +99,7 @@ show_usage() {
     echo ""
     echo "Examples:"
     echo "  $0 add InitialCreate      # Add migration named 'InitialCreate'"
+    echo "  $0 init                   # Create initial migration if needed and update database"
     echo "  $0 update                 # Apply all pending migrations"
     echo "  $0 update InitialCreate   # Update to specific migration"
     echo "  $0 remove                 # Remove last unapplied migration"
@@ -73,14 +118,44 @@ add_migration() {
 
     echo -e "${CYAN}Adding migration '$name'...${NC}"
 
-    dotnet ef migrations add "$name" \
-        -p "$DATA_PROJECT" \
-        --startup-project "$API_PROJECT" \
+    run_dotnet_ef migrations add "$name" \
+        -p "$DATA_PROJECT_ARG" \
+        --startup-project "$API_PROJECT_ARG" \
         -o Persistence/Migrations
 
     echo ""
     echo -e "${GREEN}Migration '$name' created successfully!${NC}"
     echo -e "${YELLOW}Run '$0 update' to apply the migration.${NC}"
+}
+
+# Init database (create initial migration if missing + update)
+init_database() {
+    local name="${1:-InitialCreate}"
+
+    echo -e "${CYAN}Initializing migrations...${NC}"
+
+    local migration_output
+    if ! migration_output=$(run_dotnet_ef migrations list \
+        -p "$DATA_PROJECT_ARG" \
+        --startup-project "$API_PROJECT_ARG" 2>&1); then
+        echo "$migration_output"
+        exit 1
+    fi
+
+    if echo "$migration_output" | grep -q "No migrations were found"; then
+        echo -e "${YELLOW}No migrations found. Creating '$name'...${NC}"
+        run_dotnet_ef migrations add "$name" \
+            -p "$DATA_PROJECT_ARG" \
+            --startup-project "$API_PROJECT_ARG" \
+            -o Persistence/Migrations
+    else
+        echo -e "${YELLOW}Existing migrations detected. Skip creating initial migration.${NC}"
+    fi
+
+    update_database
+
+    echo ""
+    echo -e "${GREEN}Init completed successfully!${NC}"
 }
 
 # Update database
@@ -91,13 +166,13 @@ update_database() {
 
     if [ -n "$target" ]; then
         echo -e "  Target: $target"
-        dotnet ef database update "$target" \
-            -p "$DATA_PROJECT" \
-            --startup-project "$API_PROJECT"
+        run_dotnet_ef database update "$target" \
+            -p "$DATA_PROJECT_ARG" \
+            --startup-project "$API_PROJECT_ARG"
     else
-        dotnet ef database update \
-            -p "$DATA_PROJECT" \
-            --startup-project "$API_PROJECT"
+        run_dotnet_ef database update \
+            -p "$DATA_PROJECT_ARG" \
+            --startup-project "$API_PROJECT_ARG"
     fi
 
     echo ""
@@ -115,9 +190,9 @@ remove_migration() {
 
     echo -e "${CYAN}Removing last migration...${NC}"
 
-    dotnet ef migrations remove \
-        -p "$DATA_PROJECT" \
-        --startup-project "$API_PROJECT" \
+    run_dotnet_ef migrations remove \
+        -p "$DATA_PROJECT_ARG" \
+        --startup-project "$API_PROJECT_ARG" \
         $force
 
     echo ""
@@ -129,9 +204,9 @@ list_migrations() {
     echo -e "${CYAN}Listing migrations...${NC}"
     echo ""
 
-    dotnet ef migrations list \
-        -p "$DATA_PROJECT" \
-        --startup-project "$API_PROJECT"
+    run_dotnet_ef migrations list \
+        -p "$DATA_PROJECT_ARG" \
+        --startup-project "$API_PROJECT_ARG"
 }
 
 # Show migration status
@@ -139,12 +214,12 @@ show_status() {
     echo -e "${CYAN}Checking migration status...${NC}"
     echo ""
 
-    dotnet ef migrations list \
-        -p "$DATA_PROJECT" \
-        --startup-project "$API_PROJECT" \
-        --no-connect 2>/dev/null || dotnet ef migrations list \
-        -p "$DATA_PROJECT" \
-        --startup-project "$API_PROJECT"
+    run_dotnet_ef migrations list \
+        -p "$DATA_PROJECT_ARG" \
+        --startup-project "$API_PROJECT_ARG" \
+        --no-connect 2>/dev/null || run_dotnet_ef migrations list \
+        -p "$DATA_PROJECT_ARG" \
+        --startup-project "$API_PROJECT_ARG"
 }
 
 # Main
@@ -153,24 +228,42 @@ main() {
     shift 2>/dev/null || true
 
     case "$command" in
+        help|--help|-h|"")
+            ;;
+        *)
+            resolve_dotnet
+            ;;
+    esac
+
+    case "$command" in
         add)
             find_projects
+            set_project_args
             add_migration "$1"
+            ;;
+        init)
+            find_projects
+            set_project_args
+            init_database "$1"
             ;;
         update)
             find_projects
+            set_project_args
             update_database "$1"
             ;;
         remove)
             find_projects
+            set_project_args
             remove_migration "$1"
             ;;
         list)
             find_projects
+            set_project_args
             list_migrations
             ;;
         status)
             find_projects
+            set_project_args
             show_status
             ;;
         help|--help|-h|"")

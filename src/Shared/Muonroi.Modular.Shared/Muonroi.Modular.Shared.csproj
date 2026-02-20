@@ -1,5 +1,4 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -9,31 +8,10 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(MSBuildThisFileDirectory)..\..\Muonroi.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
-
   <ItemGroup>
-    <PackageReference Include="Muonroi.BuildingBlock" Version="1.9.2" />
+    <PackageReference Include="Muonroi.BuildingBlock" Version="1.9.10" />
   </ItemGroup>
-
   <ItemGroup>
     <Folder Include="Model\" />
   </ItemGroup>
-
 </Project>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

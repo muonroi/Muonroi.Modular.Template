@@ -8,6 +8,25 @@
   "tags": { "language": "C#", "type": "solution" },
   "preferNameDirectory": true,
   "sourceName": "Muonroi.Modular",
+  "sources": [
+    {
+      "modifiers": [
+        {
+          "exclude": [
+            ".git/**",
+            ".github/**",
+            "images/**",
+            "Properties/**",
+            "GlobalUsings.cs",
+            "Muonroi.Modular.csproj",
+            "Muonroi.Modular.Template.nuspec",
+            "Muonroi.snk",
+            "README_NEW.md"
+          ]
+        }
+      ]
+    }
+  ],
   "primaryOutputs": [
     {
       "path": "Muonroi.Modular.sln"
