@@ -295,6 +295,12 @@ builder.Services.AddIdentityModule();
 builder.Services.AddCatalogModule();
 ```
 
+## Edition Notes
+
+- Template package is MIT.
+- Generated projects run in Free mode by default (`LicenseConfigs:LicenseFilePath = null`).
+- If you enable premium modules (multi-tenant strict mode, RBAC+, rule-engine workflows, gRPC, message bus, distributed cache, audit trail), provide a paid Muonroi license with matching feature keys.
+
 ## License
 
 MIT License. See [LICENSE.txt](LICENSE.txt) for details.
