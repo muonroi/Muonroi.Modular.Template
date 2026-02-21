@@ -66,6 +66,12 @@ dotnet new mr-mod-sln -n <ProjectName> [--ui <angular|react|mvc|none>]
 | `--name` | `-n` | Solution/project name | (required) |
 | `--UiFramework` | `--ui` | Frontend shell scaffold (`angular`, `react`, `mvc`, `none`) | `none` |
 
+Generated UI shells use Muonroi hybrid UI engine:
+
+- Backend metadata endpoints: `GET /api/v1/auth/ui-engine/{userId}`, `GET /api/v1/auth/ui-engine/current`
+- FE runtime packages: `@muonroi/ui-engine-core`, `@muonroi/ui-engine-angular`, `@muonroi/ui-engine-react`
+- MVC runtime package: `Muonroi.Ui.Engine.Mvc`
+
 ### Examples
 
 ```bash
