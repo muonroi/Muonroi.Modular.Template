@@ -58,12 +58,13 @@ dotnet new list | grep "mr-mod-sln"
 ### Create new project
 
 ```bash
-dotnet new mr-mod-sln -n <ProjectName>
+dotnet new mr-mod-sln -n <ProjectName> [--ui <angular|react|mvc|none>]
 ```
 
 | Parameter | Short | Description | Default |
 |-----------|-------|-------------|---------|
 | `--name` | `-n` | Solution/project name | (required) |
+| `--UiFramework` | `--ui` | Frontend shell scaffold (`angular`, `react`, `mvc`, `none`) | `none` |
 
 ### Examples
 
@@ -72,6 +73,9 @@ dotnet new mr-mod-sln -n <ProjectName>
 dotnet new mr-mod-sln -n ECommerce
 
 # Creates modules: Identity, Catalog with shared Kernel
+
+# Create modular monolith with React shell starter
+dotnet new mr-mod-sln -n ECommerce --ui react
 ```
 
 ## Project Structure
