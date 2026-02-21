@@ -1,7 +1,5 @@
 # Muonroi.Modular.Template
 
-[![Ask DeepWiki](https://raw.githubusercontent.com/muonroi/MuonroiBuildingBlock/main/src/Muonroi.BuildingBlock/Images/deep-wiki.png)](https://deepwiki.com/muonroi/Muonroi.Modular.Template)
-
 A .NET solution template for building Modular Monolith applications using ASP.NET Core with the Muonroi.BuildingBlock library. Perfect for enterprise systems with medium complexity that need module separation while keeping deployment simple.
 
 ## Quick Start
@@ -44,8 +42,8 @@ dotnet new install Muonroi.Modular.Template
 ### From source
 
 ```bash
-git clone https://github.com/muonroi/MuonroiBuildingBlock.git
-cd MuonroiBuildingBlock/src/Muonroi.Modular.Template
+git clone <your-private-url>/Muonroi.Modular.Template.git
+cd Muonroi.Modular.Template
 dotnet new install ./
 ```
 
@@ -274,11 +272,14 @@ Modules communicate via:
 
 ## Documentation
 
-- [Architecture Overview](../../docs/architecture-overview.md)
-- [Modular Monolith Guide](../../docs/modular-monolith-guide.md)
-- [Appsettings Guide](../../docs/appsettings-guide.md)
-- [Auth Module Guide](../../docs/auth-module-guide.md)
-- [Permission Guide](../../docs/permission-guide.md)
+Synced references from `MuonroiBuildingBlock/docs` (private distribution):
+
+- [License Capability Model](docs/license-capability-model.md)
+- [Control Plane MVP](docs/control-plane-mvp.md)
+- [Enterprise Secure Profile (E2)](docs/enterprise-secure-profile-e2.md)
+- [Enterprise Centralized Authorization (E3)](docs/enterprise-centralized-authorization-e3.md)
+- [Enterprise Compliance (E4)](docs/enterprise-compliance-e4.md)
+- [Enterprise Operations (E5)](docs/enterprise-operations-e5.md)
 
 ## Troubleshooting
 
