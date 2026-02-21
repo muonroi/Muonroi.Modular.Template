@@ -13,7 +13,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Muonroi.BuildingBlock" Version="1.9.10" />
+    <PackageReference Include="Muonroi.BuildingBlock" Version="1.9.11" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Muonroi.Modular.Shared\Muonroi.Modular.Shared.csproj" />
