@@ -73,6 +73,11 @@ Generated UI shells use Muonroi hybrid UI engine:
 - MVC runtime package: `Muonroi.Ui.Engine.Mvc`
 - Optional UI-kit adapter package: `@muonroi/ui-engine-primeng`
 
+Template boundary:
+- `Muonroi.Modular.Template` keeps scaffold/wiring for `dotnet new`.
+- Shared UI runtime core is maintained in `Muonroi.Ui.Engine`.
+- Runtime verification should be executed on freshly generated projects under `_tmp/verify-runs`, not by treating template source as production app.
+
 Sync helper:
 
 ```bash
@@ -271,6 +276,27 @@ Modules communicate via:
 - **Service Discovery** - Consul integration
 - **Message Bus** - Kafka/RabbitMQ via MassTransit
 - **Background Jobs** - Hangfire/Quartz integration
+
+## Rule Engine
+
+This template ships with ready-to-use rule samples and hooks.
+
+### Quick Start
+
+See [Rule Engine Quick Start](docs/RULE_ENGINE_QUICKSTART.md).
+
+### Examples in this template
+
+- `src/Host/Muonroi.Modular.Host/Rules/B2B/B2BRegistrationRules.cs`
+- `src/Host/Muonroi.Modular.Host/Rules/ContainerValidationRule.cs`
+- `src/Host/Muonroi.Modular.Host/Rules/ContainerExistenceRule.cs`
+- `src/Host/Muonroi.Modular.Host/Rules/LoggingHook.cs`
+
+### Centralized docs
+
+- [Rule Engine Guide](https://github.com/muonroi/Muonroi.Docs/blob/main/docs/rule-engine-guide.md)
+- [Rule Engine Dependencies](https://github.com/muonroi/Muonroi.Docs/blob/main/docs/rule-engine-dependencies.md)
+- [Rule Engine Advanced Patterns](https://github.com/muonroi/Muonroi.Docs/blob/main/docs/rule-engine-advanced-patterns.md)
 
 ## Module Guidelines
 

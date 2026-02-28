@@ -24,7 +24,7 @@
     <None Include="README.md" Pack="true" PackagePath="\"/>
     <None Include="LICENSE" Pack="true" PackagePath="\"/>
     <None Include="images/logo.jpg" Pack="true" PackagePath="\"/>
-    <Content Include="**\*" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;**\.github\**;Muonroi.Modular.csproj" />
+    <Content Include="**\*" Exclude="**\bin\**;**\obj\**;**\.vs\**;**\.git\**;**\.github\**;**\node_modules\**;**\dist\**;**\.angular\**;**\*.db;**\*.db-shm;**\*.db-wal;**\*.log;Muonroi.Modular.csproj" />
   </ItemGroup>
 </Project>
 

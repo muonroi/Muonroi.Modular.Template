@@ -10,6 +10,20 @@ This file defines the unified working rules for Muonroi repositories.
 - `Muonroi.Microservices.Template`
 - `Muonroi.Docs` (documentation hub)
 
+## Template Source vs Generated Project
+
+- `*.Template` repositories are template sources for NuGet packaging, not final runtime apps.
+- Do not validate feature runtime by implementing directly in an already-existing generated app outside template flow.
+- End-to-end verification must follow:
+1. Pack template from source repo.
+2. Install template package (`dotnet new install ...`).
+3. Generate a fresh project under `_tmp\verify-runs\<run-id>`.
+4. Run/verify on the generated project.
+- UI shell inclusion is opt-in by template parameter:
+1. `--ui none`: no UI folder.
+2. `--ui angular|react|mvc`: include selected UI scaffold only.
+- Shared reusable UI core must live in `Muonroi.Ui.Engine`; template UI folders should keep only wiring/scaffold and screen implementation.
+
 ## Workspace Layout
 
 - Keep project root (`D:\Personal\Project`) clean. Only these top-level folders are allowed:

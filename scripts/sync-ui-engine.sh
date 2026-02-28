@@ -80,20 +80,14 @@ install_ui_packages() {
 if [[ "${FRAMEWORK}" == "angular" || "${FRAMEWORK}" == "all" ]]; then
   install_ui_packages "${REPO_ROOT}/ui/angular" \
     "file:${UI_ENGINE_PATH}/packages/m-ui-engine-core" \
-    "file:${UI_ENGINE_PATH}/packages/m-ui-engine-angular"
+    "file:${UI_ENGINE_PATH}/packages/m-ui-engine-angular" \
+    "file:${UI_ENGINE_PATH}/packages/m-ui-engine-primeng"
 fi
 
 if [[ "${FRAMEWORK}" == "react" || "${FRAMEWORK}" == "all" ]]; then
   install_ui_packages "${REPO_ROOT}/ui/react" \
     "file:${UI_ENGINE_PATH}/packages/m-ui-engine-core" \
     "file:${UI_ENGINE_PATH}/packages/m-ui-engine-react"
-fi
-
-if [[ "${FRAMEWORK}" == "all" ]]; then
-  if [[ -f "${REPO_ROOT}/ui/angular/package.json" ]]; then
-    install_ui_packages "${REPO_ROOT}/ui/angular" \
-      "file:${UI_ENGINE_PATH}/packages/m-ui-engine-primeng"
-  fi
 fi
 
 OUTPUT_DIR="${REPO_ROOT}/ui/generated-clients"
