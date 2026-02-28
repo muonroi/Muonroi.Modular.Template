@@ -6,9 +6,8 @@ namespace Muonroi.Modular.Host.Services
         {
             _ = configuration;
 
-            services
-                .AddRuleEngine()
-                .AddRulesFromAssemblies(typeof(RegisterService).Assembly);
+            services.AddRuleEngine<int>();
+            services.AddRulesFromAssemblies(typeof(RegisterService).Assembly);
 
             return services;
         }

@@ -12,5 +12,18 @@ public class RulesController(IMediator mediator, ILogger logger, IMapper mapper)
             .ConfigureAwait(false);
         return response.GetActionResult();
     }
+
+    [HttpGet("workflow/{value:int}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> EvaluateWorkflow(
+        int value,
+        [FromQuery] RuleExecutionMode? mode,
+        CancellationToken cancellationToken)
+    {
+        var response = await Mediator
+            .Send(new RunRuleWorkflowQuery(value, mode), cancellationToken)
+            .ConfigureAwait(false);
+        return response.GetActionResult();
+    }
 }
 

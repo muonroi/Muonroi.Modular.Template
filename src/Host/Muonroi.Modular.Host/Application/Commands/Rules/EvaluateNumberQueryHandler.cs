@@ -7,8 +7,9 @@ public sealed class EvaluateNumberQueryHandler(RuleOrchestrator<int> orchestrato
 
     public async Task<MResponse<FactBag>> Handle(EvaluateNumberQuery request, CancellationToken cancellationToken)
     {
-        var facts = await _orchestrator.ExecuteAsync(request.Value, cancellationToken).ConfigureAwait(false);
+        var facts = await _orchestrator.ExecuteAsync(request.Value, cancellationToken: cancellationToken).ConfigureAwait(false);
         return new MResponse<FactBag> { Result = facts };
     }
 }
+
 
